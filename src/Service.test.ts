@@ -132,4 +132,80 @@ describe("Service", () => {
     expect(response.url).toBe("https://api.github.com/users/heart-re-up");
     expect(response.type).toBe("User");
   });
+
+  it("Promise를 직접 URL로 사용하는 케이스", async () => {
+    type RequestGetUser = {
+      name: string;
+    };
+
+    type ResponseGetUser = {
+      login: string;
+      url: string;
+      type: string;
+    };
+
+    const spec: ServiceSpec<RequestGetUser, ResponseGetUser> = {
+      url: Promise.resolve("https://api.github.com/users/heart-re-up"),
+    };
+
+    const getUser = service.create(spec);
+    const response = await getUser({ name: "not-used" });
+    expect(response.login).toBe("heart-re-up");
+    expect(response.url).toBe("https://api.github.com/users/heart-re-up");
+    expect(response.type).toBe("User");
+  });
+
+  it("Promise를 반환하는 함수를 URL로 사용하는 케이스", async () => {
+    type RequestGetUser = {
+      name: string;
+    };
+
+    type ResponseGetUser = {
+      login: string;
+      url: string;
+      type: string;
+    };
+
+    const spec: ServiceSpec<RequestGetUser, ResponseGetUser> = {
+      url: (req) => Promise.resolve(`https://api.github.com/users/${req.name}`),
+    };
+
+    const getUser = service.create(spec);
+    const response = await getUser({ name: "heart-re-up" });
+    expect(response.login).toBe("heart-re-up");
+    expect(response.url).toBe("https://api.github.com/users/heart-re-up");
+    expect(response.type).toBe("User");
+  });
+
+  it("Promise를 init으로 사용하는 케이스", async () => {
+    type PostRequest = {
+      name: string;
+      age: number;
+    };
+
+    type PostResponse = {
+      json: {
+        name: string;
+        age: number;
+      };
+      url: string;
+    };
+
+    const spec: ServiceSpec<PostRequest, PostResponse> = {
+      url: "https://httpbin.org/post",
+      init: (req) =>
+        Promise.resolve({
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(req),
+        }),
+    };
+
+    const postFunction = service.create(spec);
+    const response = await postFunction({ name: "홍길동", age: 30 });
+    expect(response.json.name).toBe("홍길동");
+    expect(response.json.age).toBe(30);
+  });
 });
