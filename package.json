@@ -1,6 +1,6 @@
 {
 	"name": "fetch-shuttle",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "A building type-safe api service layers with minimal effort.",
 	"type": "module",
 	"main": "dist/index.cjs",
