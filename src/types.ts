@@ -27,6 +27,6 @@ export type ServiceSpec<TRequest, TResponse> = {
   transform?: ServiceResponseTransform<TResponse>;
 };
 
-export type CallableService<TRequest, TResponse> = (
-  params: TRequest,
-) => Promise<TResponse>;
+export type CallableService<TRequest, TResponse> = TRequest extends void
+  ? (() => Promise<TResponse>) & ((params?: TRequest) => Promise<TResponse>)
+  : (params: TRequest) => Promise<TResponse>;

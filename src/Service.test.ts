@@ -208,4 +208,23 @@ describe("Service", () => {
     expect(response.json.name).toBe("홍길동");
     expect(response.json.age).toBe(30);
   });
+
+  it("void 타입의 TRequest를 사용하는 케이스 - 매개변수 없이 호출", async () => {
+    const spec = {
+      url: "https://api.github.com/zen",
+      transform: async (response) => await response.text(),
+    };
+
+    const getZen = service.create<void, string>(spec);
+
+    // 매개변수 없이 호출
+    const response1 = await getZen();
+    expect(typeof response1).toBe("string");
+    expect(response1.length).toBeGreaterThan(0);
+
+    // undefined를 전달하는 방식 (빈 객체 대신)
+    const response2 = await getZen(undefined);
+    expect(typeof response2).toBe("string");
+    expect(response2.length).toBeGreaterThan(0);
+  });
 });

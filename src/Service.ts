@@ -48,7 +48,7 @@ export class Service {
   create<TRequest, TResponse = unknown>(
     spec: ServiceSpec<TRequest, TResponse>,
   ): CallableService<TRequest, TResponse> {
-    return async (params: TRequest): Promise<TResponse> => {
+    const serviceFunction = async (params: TRequest): Promise<TResponse> => {
       const url = await resolveUrl(params, spec.url);
       const init = (await resolveInit(params, spec.init)) ?? { method: "GET" };
       const response = await this._fetch(url, init);
@@ -57,5 +57,22 @@ export class Service {
       }
       return await spec.transform(response);
     };
+
+    // TRequest가 void인 경우와 아닌 경우를 구분하여 함수 반환
+    if (false as unknown as TRequest extends void ? true : false) {
+      // void 타입인 경우
+      const noParamFunction = () => serviceFunction({} as TRequest);
+      const optionalParamFunction = (params?: TRequest) =>
+        serviceFunction(params ?? ({} as TRequest));
+
+      // 두 함수를 합쳐서 반환
+      return Object.assign(
+        noParamFunction,
+        optionalParamFunction,
+      ) as CallableService<TRequest, TResponse>;
+    } else {
+      // void가 아닌 경우
+      return serviceFunction as CallableService<TRequest, TResponse>;
+    }
   }
 }
