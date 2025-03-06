@@ -1,5 +1,10 @@
 # fetch-shuttle
 
+![GitHub top language](https://img.shields.io/github/languages/top/heart-re-up/fetch-shuttle)
+[![npm version](https://img.shields.io/npm/v/fetch-shuttle.svg)](https://www.npmjs.com/package/fetch-shuttle)
+[![License](https://img.shields.io/npm/l/fetch-shuttle.svg)](https://github.com/yourusername/fetch-shuttle/blob/main/LICENSE)
+[![npm downloads](https://img.shields.io/npm/dm/fetch-shuttle.svg)](https://www.npmjs.com/package/fetch-shuttle)
+
 HTTP 요청 서비스 레이어 구성을 위한 라이브러리입니다.
 
 실제 요청을 처리하는 클라이언트 및 응답을 처리하는 비지니스와 별개로 다음 항목만 정의하여 원격 네트워크 요청과 응답에 대한 서비스 레이어를 일관된 방식으로 처리할 수 있도록 합니다.
