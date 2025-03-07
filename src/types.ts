@@ -1,3 +1,12 @@
+export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+// 여러 필드를 옵셔널로 만드는 타입
+export type OptionalMultiple<T, K extends readonly (keyof T)[]> = Omit<
+  T,
+  K[number]
+> &
+  Partial<Pick<T, K[number]>>;
+
 export type FetchLike = typeof fetch;
 
 export type PropertyInitializer<TParamsType, TReturnType> =
